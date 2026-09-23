@@ -334,6 +334,18 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
 .chart + .small-t { margin-top: 12px; }
 .howto { padding-left: 22px; margin: 0; display: grid; gap: 8px; }
 
+.link-list { list-style: none; margin: 0; padding: 0; }
+.link-list a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 2px; text-decoration: none; color: inherit;
+  border-bottom: 1.5px solid var(--line);
+}
+.link-list li:first-child a { border-top: 1.5px solid var(--line); }
+.link-list a > span { flex: 1; min-width: 0; }
+.link-list a b { display: block; }
+.link-list a .small-t { display: block; line-height: 1.35; }
+.link-list a svg { width: 18px; height: 18px; flex: none; color: var(--muted); }
+
 /* ---------- Chrome: tab bar, FAB, toast ---------- */
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
@@ -534,9 +546,10 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
 .sky-phase { font-size: .92rem; opacity: .85; }
 
 /* ---------- Nudges ---------- */
+.block.nudges { margin-top: 0; }
 .nudge-times { list-style: none; padding: 0; margin: 12px 0 14px; border-top: 1.5px solid var(--line); }
 .nudge-times li { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1.5px solid var(--line); }
-.nudge-times b { flex: none; width: 76px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.nudge-times b { flex: none; width: 6.6rem; font-variant-numeric: tabular-nums; }
 .note { background: var(--surface); border: 1.5px dashed var(--line); border-radius: var(--r-md); padding: 12px 14px; font-size: .93rem; color: var(--muted); }
 .note code, .nudges code { font-size: .85em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; }
 .on-line { display: flex; align-items: center; gap: 8px; font-weight: 700; }

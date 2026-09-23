@@ -9,6 +9,7 @@
     title: 'More',
     render(el) {
       const items = [
+        ['#/settings', 'Settings', 'Notifications, name, theme and backup'],
         ['#/venus', 'Venus retrograde', 'Your chart ruler’s season: key dates, what to do and what to wait on'],
         ['#/sabbat', 'With the girls', 'Family rituals for each sabbat on the Wheel of the Year'],
         ['#/sit', 'Sit in stillness', 'A guided five, ten or twenty minutes with your wave'],
@@ -17,8 +18,7 @@
         ['#/rhythm', 'Rhythm', 'Your day in blocks, with protected make and hermit time'],
         ['#/reflect', 'Reflect', 'Evening check-in and your week at a glance'],
         ['#/sky?view=blueprint', 'My blueprint', 'Birth chart with houses, Human Design, Gene Keys and Life Path 33'],
-        ['#/gut', 'Your gut yes', 'Let your body choose what to make'],
-        ['#/settings', 'Settings', 'Nudges, name, theme and backup']
+        ['#/gut', 'Your gut yes', 'Let your body choose what to make']
       ];
       el.innerHTML = `${header('More')}
       <ul class="link-list big">${items.map(([h, t, s]) => `<li><a href="${h}"><span><b>${t}</b><span class="muted small-t">${s}</span></span>${I.chevron}</a></li>`).join('')}</ul>`;
@@ -254,6 +254,13 @@
       const s = st.s;
       el.innerHTML = `
       ${header('Settings', { back: '#/more' })}
+      <section class="block nudges">
+        <h2>Nudges from the tide</h2>
+        <p class="muted small-t">Gentle notifications, only to this phone. Each one reads how your day is going, and the moon, before it speaks.</p>
+        <ul class="nudge-times">${T.CONFIG.NUDGES.map((n) => `<li><b>${esc(n.time)}</b><span>${esc(n.what)}</span></li>`).join('')}</ul>
+        <div id="nudgeBox"><p class="muted small-t">Checking…</p></div>
+      </section>
+
       <div class="stack">
         <div class="field"><label class="lbl" for="sname">My name</label><input id="sname" value="${esc(s.settings.name)}" autocomplete="off"></div>
         <div class="field"><span class="lbl">Theme</span>
@@ -269,13 +276,6 @@
         <div class="seg seg-2" role="group" aria-label="House system">
           ${[['placidus', 'Placidus'], ['whole', 'Whole sign']].map(([k, l]) => `<button class="seg-btn" data-hs="${k}" aria-pressed="${(s.settings.houseSystem || 'placidus') === k}">${l}</button>`).join('')}
         </div>
-      </section>
-
-      <section class="block nudges">
-        <h2>Nudges from the tide</h2>
-        <p class="muted small-t">Gentle notifications, only to this phone. Each one reads how your day is going, and the moon, before it speaks.</p>
-        <ul class="nudge-times">${T.CONFIG.NUDGES.map((n) => `<li><b>${esc(n.time)}</b><span>${esc(n.what)}</span></li>`).join('')}</ul>
-        <div id="nudgeBox"><p class="muted small-t">Checking…</p></div>
       </section>
 
       <section class="block">
@@ -307,11 +307,15 @@
 
       const box = el.querySelector('#nudgeBox');
       async function drawNudges() {
-        const st2 = await T.push.status();
+        const st2 = await Promise.race([
+          T.push.status(),
+          new Promise((resolve) => setTimeout(() => resolve({ state: 'slow' }), 4000))
+        ]);
         const msgs = {
           unsupported: '<p class="note">This browser can’t receive notifications. Open Tide in Safari on your iPhone (iOS 16.4 or newer).</p>',
           'not-installed': '<p class="note">Open Tide from its home screen icon to turn nudges on. iPhones only allow notifications for apps added to the home screen.</p>',
-          'needs-setup': '<p class="note">One-time setup needed: add your public key to <code>js/config.js</code>. The steps are in <code>PUSH-SETUP.md</code>.</p>',
+          'needs-setup': '<p class="note">This phone doesn’t have the notification key yet. Close Tide completely, then open it again from the home screen icon.</p>',
+          slow: '<p class="note">Still connecting. Close Tide completely, then open it again from the home screen icon.</p>',
           denied: '<p class="note">Notifications are blocked. Turn them on in iPhone Settings → Notifications → Tide, then come back.</p>'
         };
         if (msgs[st2.state]) { box.innerHTML = msgs[st2.state]; return; }
