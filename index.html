@@ -17,8 +17,37 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
+<style>
+  .boot{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#142230;color:#F7F3EA;transition:opacity .55s ease}
+  .boot.is-gone{opacity:0;pointer-events:none}
+  .boot-orb{width:148px;height:148px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#F5E1DA,transparent 42%),radial-gradient(circle at 50% 58%,#6FA3A0,#2F6B6A);box-shadow:0 18px 50px -18px rgba(111,163,160,.8);animation:boot-breath 4.4s ease-in-out infinite}
+  .boot-word{margin:0;font-family:Fraunces,Georgia,serif;font-size:3.4rem;font-weight:600;line-height:1;letter-spacing:-.02em}
+  .boot-word.is-out{color:#7DBDB7}
+  .boot-name{margin:0;font-family:Karla,-apple-system,sans-serif;font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;opacity:.55}
+  @keyframes boot-breath{0%,100%{transform:scale(.72)}50%{transform:scale(1)}}
+  @media (prefers-reduced-motion:reduce){.boot-orb{animation:none}}
+</style>
 </head>
 <body>
+<div id="boot" class="boot" role="status" aria-live="polite">
+  <div class="boot-orb" aria-hidden="true"></div>
+  <p class="boot-word" id="bootWord">Inhale</p>
+  <p class="boot-name">Tide</p>
+</div>
+<script>
+(function () {
+  var word = document.getElementById('bootWord');
+  var inn = true;
+  setInterval(function () {
+    var boot = document.getElementById('boot');
+    if (!boot || boot.classList.contains('is-gone') || !word) return;
+    inn = !inn;
+    word.textContent = inn ? 'Inhale' : 'Exhale';
+    word.classList.toggle('is-out', !inn);
+  }, 2200);
+  window.__tideBoot = performance.now();
+})();
+</script>
 <a class="skip" href="#view">Skip to content</a>
 <main id="view" tabindex="-1"></main>
 

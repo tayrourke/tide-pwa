@@ -322,6 +322,15 @@
       </div>
       <p class="scene-hint" id="hint">${bottleReady ? 'A message in a bottle just drifted in. Tap it.' : d.done.make ? 'Tap the water and your three Pisces fish swim to you. Tap a star to see its ritual.' : 'Each practice lights a star in your Pisces constellation. Create something first and a message in a bottle drifts in.'}</p>
 
+      <a class="breath-card" href="#/surf">
+        <span class="breath-card-orb" aria-hidden="true"></span>
+        <span>
+          <b>Inhale</b>
+          <em>Exhale</em>
+          <small>Nine slow breaths. The wave rises, then falls.</small>
+        </span>
+      </a>
+
       ${goalLine(n, d)}
       <ul class="practices" aria-label="Today’s practices">
         ${T.DATA.RITUALS.map((r) => `<li class="practice ${d.done[r.id] ? 'is-done' : ''}">
@@ -343,11 +352,6 @@
       ${venusBanner()}
       ${scrollBanner(d)}
       ${affirmCard()}
-
-      <a class="surf-cta" href="#/surf">
-        <span class="surf-wave" aria-hidden="true">${T.ui.I.wave}</span>
-        <span><b>Feel the pull to scroll?</b><small>Breathe with the wave instead. Nine slow breaths, and the sea gives you a pearl</small></span>
-      </a>
 
       ${skyCard(reading)}
 

@@ -72,6 +72,19 @@
 
   T.refresh = render;
 
+  function hideBoot() {
+    const boot = document.getElementById('boot');
+    if (!boot || boot.classList.contains('is-gone')) return;
+    boot.classList.add('is-gone');
+    setTimeout(() => { if (boot.parentNode) boot.remove(); }, 600);
+  }
+
+  function finishBoot() {
+    const started = window.__tideBoot || performance.now();
+    const wait = Math.max(0, 1600 - (performance.now() - started));
+    setTimeout(() => { if (!T._updating) hideBoot(); }, wait);
+  }
+
   st.load();
   if (window.TideAstro) TideAstro.setHouseSystem(st.s.settings.houseSystem || 'placidus');
   T.applyTheme();
@@ -81,11 +94,22 @@
   document.addEventListener('visibilitychange', () => { if (!document.hidden) checkDay(); });
   setInterval(checkDay, 60000);
   render();
+  finishBoot();
 
-  // Offline support when served over http(s); skipped inside sandboxed previews
+  // A new version takes over behind the load screen, then the app reloads once.
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    const hadController = !!navigator.serviceWorker.controller;
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || refreshing) return;
+      refreshing = true;
+      T._updating = true;
+      const word = document.getElementById('bootWord');
+      if (word) { word.textContent = 'Inhale'; word.classList.remove('is-out'); }
+      location.reload();
+    });
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+      navigator.serviceWorker.register('sw.js').then((reg) => reg.update()).catch(() => {});
     });
   }
 })(window.Tide);

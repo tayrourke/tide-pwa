@@ -413,16 +413,25 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
 .bottle.gone { opacity: 0; }
 .sand-t { opacity: .95; }
 
-.surf-cta {
-  display: flex; align-items: center; gap: 14px;
-  margin: 20px 0 6px; padding: 16px 18px;
-  background: var(--ink); color: var(--bg);
-  border-radius: var(--r-lg); text-decoration: none; box-shadow: var(--shadow);
+.breath-card {
+  display: grid; grid-template-columns: 92px 1fr; gap: 16px; align-items: center;
+  margin: 8px 0 18px; padding: 18px 18px 18px 16px;
+  border-radius: 28px; text-decoration: none; color: #F7F3EA;
+  background:
+    radial-gradient(circle at 18% 50%, rgba(111, 163, 160, .35), transparent 42%),
+    #142230;
+  box-shadow: var(--shadow);
 }
-.surf-cta b { display: block; font-family: var(--serif); font-size: 1.22rem; font-weight: 600; }
-.surf-cta small { display: block; opacity: .75; font-size: .9rem; }
-.surf-wave { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--bg) 14%, transparent); }
-.surf-wave svg { width: 24px; height: 24px; }
+.breath-card-orb {
+  width: 84px; height: 84px; border-radius: 50%; justify-self: center;
+  background: radial-gradient(circle at 38% 32%, #F5E1DA, transparent 42%), radial-gradient(circle at 50% 58%, #6FA3A0, #2F6B6A);
+  animation: boot-breath 4.4s ease-in-out infinite;
+}
+@keyframes boot-breath { 0%, 100% { transform: scale(.72); } 50% { transform: scale(1); } }
+.breath-card b, .breath-card em { display: block; font-family: var(--serif); font-style: normal; font-weight: 600; line-height: 1; }
+.breath-card b { font-size: 2.35rem; }
+.breath-card em { font-size: 1.85rem; color: #7DBDB7; margin-top: 2px; }
+.breath-card small { display: block; margin-top: 8px; color: rgba(247, 243, 234, .72); font-size: .9rem; }
 
 /* ---------- Reveal ---------- */
 .reveal {
@@ -557,9 +566,17 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: .75; }
 .nudges textarea { font-size: .8rem; font-family: ui-monospace, Menlo, monospace; margin-top: 8px; }
 
 /* ---------- Breathe ---------- */
-.breath-word { font-family: var(--serif); font-size: 2.6rem; line-height: 1.1; margin-top: 18px; color: var(--ink); transition: color 1s ease; }
+.breath-hero { position: relative; display: grid; place-items: center; min-height: 280px; margin: 8px 0 4px; text-align: center; }
+.breath-ring {
+  position: absolute; left: 50%; top: 46%; width: min(230px, 68vw); height: min(230px, 68vw);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--shell-soft) 80%, white), transparent 42%), radial-gradient(circle at 50% 58%, var(--water), var(--tide));
+  transform: translate(-50%, -50%) scale(.72); transition: transform 6s ease-in-out;
+}
+.breath-hero.is-in .breath-ring { transform: translate(-50%, -50%) scale(1); transition-duration: 4s; }
+.breath-word { position: relative; font-family: var(--serif); font-size: clamp(3rem, 14vw, 4rem); line-height: 1; margin: 0; color: var(--ink); transition: color .6s ease; }
 .breath-word.is-out { color: var(--tide); }
-.breath-count { color: var(--muted); font-size: .92rem; margin-top: 6px; }
+.breath-count { position: relative; color: var(--muted); font-size: .92rem; margin: 8px 0 0; }
 
 /* ---------- Cosmos ---------- */
 .twinkle { animation: twinkle 3.6s ease-in-out infinite; }

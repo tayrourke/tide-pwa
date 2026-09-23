@@ -24,7 +24,7 @@
       function intro() {
         const s = G.ensure();
         el.innerHTML = `
-        ${header('Breathe with the wave', { sub: 'Nine slow breaths, about a minute and a half. Breathe in as the wave rises, out as it falls. The urge usually passes by the end, and the sea leaves you a pearl.' })}
+        ${header('Inhale. Exhale.', { sub: 'Nine slow breaths, about a minute and a half. Inhale as the wave rises, exhale as it falls. The urge usually passes by the end, and the sea leaves you a pearl.' })}
         <div class="surf-stage idle">
           <svg viewBox="0 0 360 220" class="surf-svg" aria-hidden="true">
             <path d="M0 150 Q45 140 90 150 T180 150 T270 150 T360 150 V220 H0Z" fill="var(--water)" opacity=".5"/>
@@ -42,8 +42,11 @@
       function ride() {
         el.innerHTML = `
         <div class="surf-ride">
-          <p class="breath-word" id="word" aria-live="polite">Breathe in</p>
-          <p class="breath-count" id="count">Breath 1 of ${BREATHS}</p>
+          <div class="breath-hero is-in" id="hero">
+            <div class="breath-ring" aria-hidden="true"></div>
+            <p class="breath-word" id="word" aria-live="polite">Inhale</p>
+            <p class="breath-count" id="count">Breath 1 of ${BREATHS}</p>
+          </div>
           <div class="surf-stage">
             <svg viewBox="0 0 360 260" class="surf-svg" aria-hidden="true">
               <path id="back" fill="var(--water)" opacity=".45"/>
@@ -55,7 +58,7 @@
           <button class="btn btn-ghost btn-block" id="stop">Stop</button>
         </div>`;
         const back = el.querySelector('#back'), front = el.querySelector('#front'), pearl = el.querySelector('#pearl');
-        const word = el.querySelector('#word'), count = el.querySelector('#count'), phase = el.querySelector('#phase');
+        const word = el.querySelector('#word'), count = el.querySelector('#count'), phase = el.querySelector('#phase'), hero = el.querySelector('#hero');
         let lastWord = 'in', lastBreath = 0, lastWhisper = 0;
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const t0 = performance.now();
@@ -83,7 +86,7 @@
           pearl.setAttribute('cx', 180);
           pearl.setAttribute('cy', (224 - amp - 9 + Math.sin(off / 28 + 6.4) * 3).toFixed(1));
           const w = inhaling ? 'in' : 'out';
-          if (w !== lastWord) { lastWord = w; word.textContent = inhaling ? 'Breathe in' : 'Breathe out'; word.classList.toggle('is-out', !inhaling); T.ui.buzz(inhaling ? 8 : 4); }
+          if (w !== lastWord) { lastWord = w; word.textContent = inhaling ? 'Inhale' : 'Exhale'; word.classList.toggle('is-out', !inhaling); hero.classList.toggle('is-in', inhaling); hero.classList.toggle('is-out', !inhaling); T.ui.buzz(inhaling ? 8 : 4); }
           if (breath !== lastBreath) { lastBreath = breath; count.textContent = 'Breath ' + (breath + 1) + ' of ' + BREATHS; }
           const wi = Math.min(WHISPERS.length - 1, Math.floor(breath / 2));
           if (wi !== lastWhisper) { lastWhisper = wi; phase.textContent = WHISPERS[wi]; }

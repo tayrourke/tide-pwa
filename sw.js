@@ -1,6 +1,6 @@
 /* Tide service worker — offline app, plus nudges that read your day before they speak.
    Bump VERSION whenever you change files. */
-const VERSION = 'tide-v8.3.1';
+const VERSION = 'tide-v8.4.0';
 importScripts('js/astro.js', 'js/blueprint.js', 'js/sky.js', 'js/affirmations.js');
 
 const SHELL = [
@@ -14,7 +14,14 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil((async () => {
+    const cache = await caches.open(VERSION);
+    await Promise.all(SHELL.map(async (path) => {
+      const res = await fetch(path, { cache: 'reload' });
+      if (res.ok) await cache.put(path, res);
+    }));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', (e) => {
@@ -40,11 +47,21 @@ self.addEventListener('fetch', (e) => {
     return;
   }
   if (url.origin !== location.origin) return;
-  e.respondWith(caches.open(VERSION).then(async (c) => {
-    const hit = await c.match(req, { ignoreSearch: true });
-    const net = fetch(req).then((res) => { if (res.ok) c.put(req, res.clone()); return res; }).catch(() => hit);
-    return hit || net;
-  }));
+  e.respondWith((async () => {
+    const cache = await caches.open(VERSION);
+    const hit = await cache.match(req, { ignoreSearch: true });
+    const net = fetch(req, { cache: 'no-cache' }).then((res) => {
+      if (res && res.ok) cache.put(req, res.clone());
+      return res;
+    }).catch(() => null);
+    const fresh = await Promise.race([
+      net,
+      new Promise((resolve) => setTimeout(() => resolve(null), 2500))
+    ]);
+    if (fresh && fresh.ok) return fresh;
+    if (hit) return hit;
+    return (await net) || fresh || fetch(req);
+  })());
 });
 
 /* ---------- Nudges ---------- */
