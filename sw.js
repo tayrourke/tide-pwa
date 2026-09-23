@@ -1,6 +1,6 @@
 /* Tide service worker — offline app, plus nudges that read your day before they speak.
    Bump VERSION whenever you change files. */
-const VERSION = 'tide-v8.4.0';
+const VERSION = 'tide-v8.4.1';
 importScripts('js/astro.js', 'js/blueprint.js', 'js/sky.js', 'js/affirmations.js');
 
 const SHELL = [

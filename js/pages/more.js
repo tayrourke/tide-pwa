@@ -252,58 +252,93 @@
     title: 'Settings',
     render(el) {
       const s = st.s;
+      const themeName = { auto: 'Matches your phone', light: 'Light', dark: 'Dark' };
+      const houseName = (s.settings.houseSystem || 'placidus') === 'whole' ? 'Whole sign' : 'Placidus';
       el.innerHTML = `
-      ${header('Settings', { back: '#/more' })}
-      <section class="block nudges">
-        <h2>Nudges from the tide</h2>
-        <p class="muted small-t">Gentle notifications, only to this phone. Each one reads how your day is going, and the moon, before it speaks.</p>
-        <ul class="nudge-times">${T.CONFIG.NUDGES.map((n) => `<li><b>${esc(n.time)}</b><span>${esc(n.what)}</span></li>`).join('')}</ul>
-        <div id="nudgeBox"><p class="muted small-t">Checking…</p></div>
-      </section>
-
-      <div class="stack">
-        <div class="field"><label class="lbl" for="sname">My name</label><input id="sname" value="${esc(s.settings.name)}" autocomplete="off"></div>
-        <div class="field"><span class="lbl">Theme</span>
-          <div class="seg seg-3" role="group" aria-label="Theme">
-            ${['auto', 'light', 'dark'].map((t) => `<button class="seg-btn" data-theme="${t}" aria-pressed="${s.settings.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}
+      ${header('Settings', { back: '#/more', sub: 'Tap a section to open it. Tap again to close it.' })}
+      <div class="set-list">
+        <details class="set-sec">
+          <summary>
+            <span class="set-emoji e-tide" aria-hidden="true">🌊</span>
+            <span class="set-title"><b>Nudges</b><small id="nudgeHint">When the tide reaches this phone</small></span>
+          </summary>
+          <div class="set-body">
+            <p class="muted small-t">Each one reads how your day is going, and the moon, before it speaks.</p>
+            <ul class="nudge-times">${T.CONFIG.NUDGES.map((n) => `<li><b>${esc(n.time)}</b><span>${esc(n.what)}</span></li>`).join('')}</ul>
+            <div id="nudgeBox"><p class="muted small-t">Checking…</p></div>
           </div>
-        </div>
-      </div>
+        </details>
 
-      <section class="block">
-        <h2>House system</h2>
-        <p class="muted small-t">Changes which house the moon, new moons and full moons fall in. Placidus is what most chart websites use. Whole sign is the older, simpler way.</p>
-        <div class="seg seg-2" role="group" aria-label="House system">
-          ${[['placidus', 'Placidus'], ['whole', 'Whole sign']].map(([k, l]) => `<button class="seg-btn" data-hs="${k}" aria-pressed="${(s.settings.houseSystem || 'placidus') === k}">${l}</button>`).join('')}
-        </div>
-      </section>
+        <details class="set-sec">
+          <summary>
+            <span class="set-emoji e-shell" aria-hidden="true">🌙</span>
+            <span class="set-title"><b>You</b><small id="youHint">${esc(s.settings.name || 'Taylor')} · ${esc(themeName[s.settings.theme] || 'Matches your phone')}</small></span>
+          </summary>
+          <div class="set-body">
+            <div class="field"><label class="lbl" for="sname">My name</label><input id="sname" value="${esc(s.settings.name)}" autocomplete="off"></div>
+            <div class="field"><span class="lbl">Theme</span>
+              <div class="seg seg-3" role="group" aria-label="Theme">
+                ${['auto', 'light', 'dark'].map((t) => `<button class="seg-btn" data-theme="${t}" aria-pressed="${s.settings.theme === t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}
+              </div>
+            </div>
+          </div>
+        </details>
 
-      <section class="block">
-        <h2>Backup</h2>
-        <p class="muted small-t">Everything is saved on this phone only. Export a backup now and then, especially before clearing Safari data.</p>
-        <div class="btn-row">
-          <button class="btn btn-outline" id="exp">Export backup</button>
-          <label class="btn btn-outline" for="imp">Import backup</label>
-          <input type="file" id="imp" accept="application/json,.json" hidden>
-        </div>
-      </section>
+        <details class="set-sec">
+          <summary>
+            <span class="set-emoji e-lav" aria-hidden="true">✨</span>
+            <span class="set-title"><b>Houses</b><small id="houseHint">${esc(houseName)}</small></span>
+          </summary>
+          <div class="set-body">
+            <p class="muted small-t">This changes which house the moon, new moons and full moons fall in. Placidus is what most chart websites use. Whole sign is the older, simpler way.</p>
+            <div class="seg seg-2" role="group" aria-label="House system">
+              ${[['placidus', 'Placidus'], ['whole', 'Whole sign']].map(([k, l]) => `<button class="seg-btn" data-hs="${k}" aria-pressed="${(s.settings.houseSystem || 'placidus') === k}">${l}</button>`).join('')}
+            </div>
+          </div>
+        </details>
 
-      <section class="block">
-        <h2>Put Tide where Instagram was</h2>
-        <ol class="howto">
-          <li>Open Tide in Safari and tap Share, then Add to Home Screen.</li>
-          <li>Move Instagram off your home screen, and put Tide in its spot.</li>
-          <li>Put Meta Business Suite on your home screen for posting.</li>
-          <li>Set a Screen Time limit on Instagram, with a passcode someone else holds.</li>
-          <li>Keep your Brick somewhere that takes a walk to reach.</li>
-          <li>Long-press the Tide icon for shortcuts straight to Breathe and Make.</li>
-        </ol>
-      </section>
+        <details class="set-sec">
+          <summary>
+            <span class="set-emoji e-gold" aria-hidden="true">🐚</span>
+            <span class="set-title"><b>Backup</b><small>Saved on this phone only</small></span>
+          </summary>
+          <div class="set-body">
+            <p class="muted small-t">Export a backup now and then, especially before clearing Safari data.</p>
+            <div class="btn-row">
+              <button class="btn btn-outline" id="exp">Export</button>
+              <label class="btn btn-outline" for="imp">Import</label>
+              <input type="file" id="imp" accept="application/json,.json" hidden>
+            </div>
+          </div>
+        </details>
 
-      <section class="block">
-        <h2>Start over</h2>
-        <button class="btn btn-danger btn-block" id="reset">Erase everything</button>
-      </section>`;
+        <details class="set-sec">
+          <summary>
+            <span class="set-emoji e-water" aria-hidden="true">🏠</span>
+            <span class="set-title"><b>On your phone</b><small>Put Tide where Instagram was</small></span>
+          </summary>
+          <div class="set-body">
+            <ol class="howto">
+              <li>Open Tide in Safari and tap Share, then Add to Home Screen.</li>
+              <li>Move Instagram off your home screen, and put Tide in its spot.</li>
+              <li>Put Meta Business Suite on your home screen for posting.</li>
+              <li>Set a Screen Time limit on Instagram, with a passcode someone else holds.</li>
+              <li>Keep your Brick somewhere that takes a walk to reach.</li>
+              <li>Long-press the Tide icon for shortcuts straight to Breathe and Make.</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="set-sec">
+          <summary>
+            <span class="set-emoji e-danger" aria-hidden="true">🌑</span>
+            <span class="set-title"><b>Start over</b><small>Erases this phone’s Tide</small></span>
+          </summary>
+          <div class="set-body">
+            <button class="btn btn-danger btn-block" id="reset">Erase everything</button>
+          </div>
+        </details>
+      </div>`;
 
       const box = el.querySelector('#nudgeBox');
       async function drawNudges() {
@@ -318,6 +353,8 @@
           slow: '<p class="note">Still connecting. Close Tide completely, then open it again from the home screen icon.</p>',
           denied: '<p class="note">Notifications are blocked. Turn them on in iPhone Settings → Notifications → Tide, then come back.</p>'
         };
+        const hint = el.querySelector('#nudgeHint');
+        if (hint) hint.textContent = st2.state === 'on' ? 'On for this phone' : st2.state === 'off' ? 'Off for this phone' : 'When the tide reaches this phone';
         if (msgs[st2.state]) { box.innerHTML = msgs[st2.state]; return; }
         if (st2.state === 'off') {
           box.innerHTML = '<button class="btn btn-primary btn-block" id="nOn">Let the tide reach me</button>';
@@ -348,12 +385,22 @@
       el.querySelectorAll('[data-hs]').forEach((b) => (b.onclick = () => {
         s.settings.houseSystem = b.dataset.hs; st.save(); TideAstro.setHouseSystem(b.dataset.hs);
         el.querySelectorAll('[data-hs]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+        const hh = el.querySelector('#houseHint');
+        if (hh) hh.textContent = b.dataset.hs === 'placidus' ? 'Placidus' : 'Whole sign';
         T.ui.toast(b.dataset.hs === 'placidus' ? 'Using Placidus houses' : 'Using whole sign houses');
       }));
-      el.querySelector('#sname').oninput = (e) => { s.settings.name = e.target.value.trim() || T.DATA.name; st.save(); };
+      el.querySelector('#sname').oninput = (e) => {
+        s.settings.name = e.target.value.trim() || T.DATA.name; st.save();
+        const you = el.querySelector('#youHint');
+        const themeLabel = { auto: 'Matches your phone', light: 'Light', dark: 'Dark' }[s.settings.theme] || 'Matches your phone';
+        if (you) you.textContent = (e.target.value.trim() || T.DATA.name) + ' · ' + themeLabel;
+      };
       el.querySelectorAll('[data-theme]').forEach((b) => (b.onclick = () => {
         s.settings.theme = b.dataset.theme; st.save(); T.applyTheme();
         el.querySelectorAll('[data-theme]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+        const you = el.querySelector('#youHint');
+        const themeLabel = { auto: 'Matches your phone', light: 'Light', dark: 'Dark' }[b.dataset.theme];
+        if (you) you.textContent = (s.settings.name || T.DATA.name) + ' · ' + themeLabel;
       }));
       el.querySelector('#exp').onclick = () => {
         const blob = new Blob([st.exportJSON()], { type: 'application/json' });
