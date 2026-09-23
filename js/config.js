@@ -3,7 +3,7 @@
    The public key is safe to commit. The private key never goes in this repo. */
 window.Tide = window.Tide || {};
 Tide.CONFIG = {
-  VAPID_PUBLIC_KEY: '',
+  VAPID_PUBLIC_KEY: 'BNo3Z3LqruZWcyaXBmoaq1ME0mQ-SKkg8AE2lNqvMhPfJ_xmTM6l-L1VCddLdPaVLAJF6GCElyVIXlcLi5wtyIs',
   // Shown in Settings so you remember when the tide will reach you.
   // To change the real times, edit .github/workflows/tide-nudges.yml and push/send.mjs.
   NUDGES: [
