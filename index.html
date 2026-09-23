@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tide</title>
+<meta name="description" content="Make before you take. A daily ritual app for creating instead of scrolling.">
+<meta name="theme-color" content="#E9F0EF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tide">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<a class="skip" href="#view">Skip to content</a>
+<main id="view" tabindex="-1"></main>
+
+<nav class="tabbar" aria-label="Main">
+  <a class="tab" data-nav="pool" href="#/"><span class="tab-i" data-icon="pool"></span>Pool</a>
+  <a class="tab" data-nav="affirm" href="#/affirm"><span class="tab-i" data-icon="affirm"></span>I am</a>
+  <a class="tab" data-nav="make" href="#/make"><span class="tab-i" data-icon="make"></span>Make</a>
+  <a class="tab" data-nav="sky" href="#/sky"><span class="tab-i" data-icon="sky"></span>Sky</a>
+  <a class="tab" data-nav="more" href="#/more"><span class="tab-i" data-icon="more"></span>More</a>
+</nav>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/treasures.js"></script>
+<script src="js/astro.js"></script>
+<script src="js/blueprint.js"></script>
+<script src="js/sky.js"></script>
+<script src="js/affirmations.js"></script>
+<script src="js/store.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/push.js"></script>
+<script>document.querySelectorAll('[data-icon]').forEach(function(e){e.innerHTML=Tide.ui.I[e.dataset.icon]||''});</script>
+<script src="js/game.js"></script>
+<script src="js/pages/pool.js"></script>
+<script src="js/pages/surf.js"></script>
+<script src="js/pages/sit.js"></script>
+<script src="js/pages/make.js"></script>
+<script src="js/pages/treasures.js"></script>
+<script src="js/pages/affirm.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/pages/stars.js"></script>
+<script src="js/pages/sabbat.js"></script>
+<script src="js/pages/venus.js"></script>
+<script src="js/pages/ritual.js"></script>
+<script src="js/pages/gut.js"></script>
+<script src="js/pages/more.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

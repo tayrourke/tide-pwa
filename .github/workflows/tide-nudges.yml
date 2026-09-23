@@ -1,0 +1,48 @@
+# Sends Tide's nudges to your phone. Free, no server, no database.
+#
+# Runs every half hour (at :03 and :33, which GitHub starts more reliably than :00).
+# push/send.mjs checks the real time in Los Angeles and decides what to send:
+#   on the hour  → a fresh affirmation (7 am, 3 pm and 8 pm get their special nudges instead)
+#   on the half  → "here for higher work" (it becomes "be here with them" during homeschool)
+#   quiet hours  → nothing
+# Daylight saving takes care of itself because the check uses Los Angeles time.
+#
+# Optional repo variables (Settings → Secrets and variables → Actions → Variables):
+#   TIDE_PAUSED = true        pause everything
+#   NUDGE_START = 7:00        first nudge of the day
+#   NUDGE_END   = 21:30       quiet after this
+#   HALF_HOURS  = false       turn off the :30 focus reminders
+
+name: Tide nudges
+
+on:
+  schedule:
+    - cron: '3,33 * * * *'
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Send a test nudge now'
+        type: choice
+        options: [affirm, focus, morning, afternoon, evening]
+        default: affirm
+
+jobs:
+  nudge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --prefix push --no-audit --no-fund
+      - run: node push/send.mjs
+        env:
+          SLOT: ${{ github.event.inputs.slot }}
+          TIDE_PAUSED: ${{ vars.TIDE_PAUSED }}
+          NUDGE_START: ${{ vars.NUDGE_START }}
+          NUDGE_END: ${{ vars.NUDGE_END }}
+          HALF_HOURS: ${{ vars.HALF_HOURS }}
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_SUBJECT: ${{ secrets.VAPID_SUBJECT }}
+          PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
